@@ -2,112 +2,110 @@ import java.util.Scanner;
 
 public abstract class App {
 
-    private static void criarCliente(Banco banco, String nome, String cpf) {
+    private static void criarCliente(Banco banco, Scanner scanner) {
+        System.out.print("Informe cpf: ");
+        String cpf = scanner.next();
         if (banco.isCliente(cpf)) {
             System.out.println("Já existe cliente com este cpf.");
             return;
         }
+
+        System.out.print("Informe nome: ");
+        String nome = scanner.next();
+
         Cliente cliente = new Cliente(cpf, nome);
         banco.setCliente(cliente);
     }
 
-    private static void criarConta(Banco banco, Integer tipo, String cpf) {
-        if (tipo < 0 || tipo > 1) {
-            System.out.println("Tipo de conta inválido.");
+    private static void criarConta(Banco banco, Scanner scanner) {
+        System.out.print("Informe cpf: ");
+        String cpf = scanner.next();
+        if (!banco.isCliente(cpf)) {
+            System.out.println("Não existe cliente com este cpf.");
             return;
         }
 
-        if (!banco.isCliente(cpf)) {
-            System.out.println("Não existe cliente com este cpf.");
+        System.out.print("Informe o tipo de conta [0-Corrente, 1-Poupanca]: ");
+        int tipoConta = Integer.parseInt(scanner.next());
+        if (tipoConta < 0 || tipoConta > 1) {
+            System.out.println("Tipo de conta inválido.");
             return;
         }
 
         Conta conta;
         Cliente cliente = banco.getCliente(cpf);
-
-        if (tipo == 0) {
+        if (tipoConta == 0) {
             conta = new ContaCorrente(cliente);
         } else {
             conta = new ContaPoupanca(cliente);
         }
         cliente.setConta(conta);
-        System.out.println(cliente.getContas());
         banco.setConta(conta);
     }
 
-    private static void depositar(Banco banco, String cpf, Integer numeroConta, double valor) {
+    private static void depositar(Banco banco, Scanner scanner) {
+        System.out.print("Informe cpf: ");
+        String cpf = scanner.next();
         if (!banco.isCliente(cpf)) {
             System.out.println("Não existe cliente com este cpf.");
             return;
         }
-
         Cliente cliente = banco.getCliente(cpf);
-        Conta conta = cliente.getConta(numeroConta);
 
+        System.out.print("Informe numero da conta: ");
+        Integer numeroConta = Integer.parseInt(scanner.next());
+        Conta conta = cliente.getConta(numeroConta);
         if (conta == null) {
             System.out.println("Conta não existe.");
             return;
         }
+
+        System.out.print("Informe valor a depositar: ");
+        double valor = Double.parseDouble(scanner.next());
         conta.depositar(valor);
     }
 
-    private static void sacar(Banco banco, String cpf, Integer numeroConta, double valor) {
+    private static void sacar(Banco banco, Scanner scanner) {
+        System.out.print("Informe cpf: ");
+        String cpf = scanner.next();
         if (!banco.isCliente(cpf)) {
             System.out.println("Não existe cliente com este cpf.");
             return;
         }
-
         Cliente cliente = banco.getCliente(cpf);
-        Conta conta = cliente.getConta(numeroConta);
 
+        System.out.print("Informe numero da conta: ");
+        Integer numeroConta = Integer.parseInt(scanner.next());
+        Conta conta = cliente.getConta(numeroConta);
         if (conta == null) {
             System.out.println("Conta não existe.");
             return;
         }
+
+        System.out.print("Informe valor a sacar: ");
+        double valor = Double.parseDouble(scanner.next());
         conta.sacar(valor);
     }
 
     public static void run() {
+        Scanner scanner = new Scanner(System.in);
         Banco banco = new Banco("Bancaum");
         Menu menu = new Menu();
-        Scanner scanner = new Scanner(System.in);
 
         while(true) {
             menu.show();
             String input = scanner.next();
 
             if (input.equals("d")) {
-                System.out.print("Informe cpf: ");
-                String cpf = scanner.next();
-                System.out.print("Informe numero da conta: ");
-                String numeroConta = scanner.next();
-                System.out.print("Informe valor a depositar: ");
-                String valor = scanner.next();
-                depositar(banco, cpf, Integer.parseInt(numeroConta), Double.parseDouble(valor));
+                depositar(banco, scanner);
             } else if (input.equals("s")) {
-                System.out.println("Sacar");
-                System.out.print("Informe cpf: ");
-                String cpf = scanner.next();
-                System.out.print("Informe numero da conta: ");
-                String numeroConta = scanner.next();
-                System.out.print("Informe valor a sacar: ");
-                String valor = scanner.next();
-                sacar(banco, cpf, Integer.parseInt(numeroConta), Double.parseDouble(valor));
+                sacar(banco, scanner);
             } else if (input.equals("e")) {
                 System.out.println("Extrato");
             } else if (input.equals("u")) {
-                System.out.print("Informe nome: ");
-                String nome = scanner.next();
-                System.out.print("Informe cpf: ");
-                String cpf = scanner.next();
-                criarCliente(banco, nome, cpf);
+                criarCliente(banco, scanner);
             } else if (input.equals("c")) {
-                System.out.println("Criar conta");
-                System.out.print("Informe cpf: ");
-                String cpf = scanner.next();
-                System.out.print("Informe o tipo de conta [0-Corrente, 1-Poupanca]: ");
-                String tipo = scanner.next();
-                criarConta(banco, Integer.parseInt(tipo), cpf);
+                criarConta(banco, scanner);
             } else if (input.equals("lu")) {
                 System.out.println("Listar usuarios");
                 System.out.println(banco.getClientes());
@@ -120,7 +118,6 @@ public abstract class App {
             } else {
                 System.out.println("Operação inválida, por favor selecione novamente a operação desejada.");
             }
-
         }
         scanner.close();
     }
