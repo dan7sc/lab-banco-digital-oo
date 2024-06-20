@@ -20,4 +20,8 @@ public class Cliente extends PessoaFisica {
 	public void setConta(Conta conta) {
 		contas.put(conta.numero, conta);
 	}
+
+	public Conta getConta(Integer numero) {
+		return contas.get(numero);
+	}
 }

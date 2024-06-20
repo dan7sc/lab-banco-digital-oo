@@ -35,6 +35,22 @@ public abstract class App {
         banco.setConta(conta);
     }
 
+    private static void depositar(Banco banco, String cpf, Integer numeroConta, double valor) {
+        if (!banco.isCliente(cpf)) {
+            System.out.println("Não existe cliente com este cpf.");
+            return;
+        }
+
+        Cliente cliente = banco.getCliente(cpf);
+        Conta clienteConta = cliente.getConta(numeroConta);
+
+        if (clienteConta == null) {
+            System.out.println("Conta não existe.");
+            return;
+        }
+        clienteConta.depositar(valor);
+    }
+
     public static void run() {
         Banco banco = new Banco("Bancaum");
         Menu menu = new Menu();
@@ -45,7 +61,13 @@ public abstract class App {
             String input = scanner.next();
 
             if (input.equals("d")) {
-                System.out.println("Depositar");
+                System.out.print("Informe cpf: ");
+                String cpf = scanner.next();
+                System.out.print("Informe numero da conta: ");
+                String numeroConta = scanner.next();
+                System.out.print("Informe valor a depositar: ");
+                String valor = scanner.next();
+                depositar(banco, cpf, Integer.parseInt(numeroConta), Double.parseDouble(valor));
             } else if (input.equals("s")) {
                 System.out.println("Sacar");
             } else if (input.equals("e")) {
@@ -77,5 +99,6 @@ public abstract class App {
             }
 
         }
+        scanner.close();
     }
 }

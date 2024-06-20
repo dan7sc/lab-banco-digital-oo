@@ -31,6 +31,10 @@ public class Banco {
 		contas.put(conta.getNumero(), conta);
 	}
 
+	public Conta getConta(Integer numero) {
+		return contas.get(numero);
+	}
+
 	public boolean isCliente(String cpf) {
 		return clientes.get(cpf) != null;
 	}
