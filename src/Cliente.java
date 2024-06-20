@@ -9,6 +9,7 @@ import java.util.Map;
 @ToString(callSuper = true, includeFieldNames = true)
 public class Cliente extends PessoaFisica {
 
+	@ToString.Exclude
 	private Map<Integer, Conta> contas;
 
 	public Cliente(String cpf, String nome) {

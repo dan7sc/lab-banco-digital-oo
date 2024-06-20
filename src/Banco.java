@@ -35,4 +35,8 @@ public class Banco {
 		return clientes.get(cpf) != null;
 	}
 
+	public boolean isConta(Integer numero) {
+		return contas.get(numero) != null;
+	}
+
 }

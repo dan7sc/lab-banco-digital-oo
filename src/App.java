@@ -11,6 +11,30 @@ public abstract class App {
         banco.setCliente(cliente);
     }
 
+    private static void criarConta(Banco banco, Integer tipo, String cpf) {
+        if (tipo < 0 || tipo > 1) {
+            System.out.println("Tipo de conta inválido.");
+            return;
+        }
+
+        if (!banco.isCliente(cpf)) {
+            System.out.println("Não existe cliente com este cpf.");
+            return;
+        }
+
+        Conta conta;
+        Cliente cliente = banco.getCliente(cpf);
+
+        if (tipo == 0) {
+            conta = new ContaCorrente(cliente);
+        } else {
+            conta = new ContaPoupanca(cliente);
+        }
+        cliente.setConta(conta);
+        System.out.println(cliente.getContas());
+        banco.setConta(conta);
+    }
+
     public static void run() {
         Banco banco = new Banco("Bancaum");
         Menu menu = new Menu();
@@ -34,11 +58,17 @@ public abstract class App {
                 criarCliente(banco, nome, cpf);
             } else if (input.equals("c")) {
                 System.out.println("Criar conta");
+                System.out.print("Informe cpf: ");
+                String cpf = scanner.next();
+                System.out.print("Informe o tipo de conta [0-Corrente, 1-Poupanca]: ");
+                String tipo = scanner.next();
+                criarConta(banco, Integer.parseInt(tipo), cpf);
             } else if (input.equals("lu")) {
                 System.out.println("Listar usuarios");
                 System.out.println(banco.getClientes());
             } else if (input.equals("lc")) {
                 System.out.println("Listar contas");
+                System.out.println(banco.getContas());
             } else if (input.equals("q")) {
                 System.out.println("Sair");
                 break;

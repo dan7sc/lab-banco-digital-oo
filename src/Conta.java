@@ -1,5 +1,7 @@
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString(includeFieldNames = true)
 public abstract class Conta implements IConta {
 	
 	private static final int AGENCIA_PADRAO = 1;
@@ -11,6 +13,7 @@ public abstract class Conta implements IConta {
 	protected int numero;
 	@Getter
 	protected double saldo;
+	//@ToString.Exclude
 	protected Cliente cliente;
 
 	public Conta(Cliente cliente) {
