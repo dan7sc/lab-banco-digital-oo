@@ -42,13 +42,29 @@ public abstract class App {
         }
 
         Cliente cliente = banco.getCliente(cpf);
-        Conta clienteConta = cliente.getConta(numeroConta);
+        Conta conta = cliente.getConta(numeroConta);
 
-        if (clienteConta == null) {
+        if (conta == null) {
             System.out.println("Conta não existe.");
             return;
         }
-        clienteConta.depositar(valor);
+        conta.depositar(valor);
+    }
+
+    private static void sacar(Banco banco, String cpf, Integer numeroConta, double valor) {
+        if (!banco.isCliente(cpf)) {
+            System.out.println("Não existe cliente com este cpf.");
+            return;
+        }
+
+        Cliente cliente = banco.getCliente(cpf);
+        Conta conta = cliente.getConta(numeroConta);
+
+        if (conta == null) {
+            System.out.println("Conta não existe.");
+            return;
+        }
+        conta.sacar(valor);
     }
 
     public static void run() {
@@ -70,6 +86,13 @@ public abstract class App {
                 depositar(banco, cpf, Integer.parseInt(numeroConta), Double.parseDouble(valor));
             } else if (input.equals("s")) {
                 System.out.println("Sacar");
+                System.out.print("Informe cpf: ");
+                String cpf = scanner.next();
+                System.out.print("Informe numero da conta: ");
+                String numeroConta = scanner.next();
+                System.out.print("Informe valor a sacar: ");
+                String valor = scanner.next();
+                sacar(banco, cpf, Integer.parseInt(numeroConta), Double.parseDouble(valor));
             } else if (input.equals("e")) {
                 System.out.println("Extrato");
             } else if (input.equals("u")) {
